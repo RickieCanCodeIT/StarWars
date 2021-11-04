@@ -1,11 +1,30 @@
-import C3PO from "/js/C3PO.js";
 import character from "/js/component/character.js";
 
-console.log(C3PO);
 const container = document.querySelector(".container");
-container.innerHTML += character(C3PO);
 
-MakeCharacter(C3PO);
+fetch("https://swapi.dev/api/people/4")
+    .then(res => res.json())
+    .then(jsonData => {
+        console.log(jsonData);
+        container.innerHTML += character(jsonData);
+        jsonData.films.forEach(filmElement => {
+            fetch(filmElement)
+                .then(res => res.json())
+                .then(filmData => {
+                    const filmDiv = document.querySelector(".filmDiv");
+                    const aTag = document.createElement("a");
+                    console.log(filmData);
+                    aTag.innerText = filmData.title + "";
+                    aTag.setAttribute("href", filmData.url);
+                    filmDiv.appendChild(aTag);
+                    filmDiv.innerHTML += "<br>";
+                })
+        });
+        //MakeCharacter(C3PO);
+    })
+
+
+
 
 function MakeCharacter(characterJSON) {
     const characterDiv = document.createElement("div");
